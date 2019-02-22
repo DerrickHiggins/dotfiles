@@ -1,22 +1,39 @@
 # Local/private config goes in the include
 [include]
         path = ~/.gitconfig.local
-[hub]
-        protocol = https
 [alias]
-        co = checkout
-        promote = !$ZSH/bin/git-promote
-        wtf     = !$ZSH/bin/git-wtf
-        rank-contributors = !$ZSH/bin/git-rank-contributors
-        count   = !git shortlog -sn
+        co                     = checkout
+        promote                = !$ZSH/bin/git-promote
+        wtf                    = !$ZSH/bin/git-wtf
+        rank-contributors      = !$ZSH/bin/git-rank-contributors
+        count                  = !git shortlog -sn
+        delete-merged-branches = !git co master && git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d
+        df                     = diff --patience -M -C
+        ls-changes             = ! git status -s > /dev/null && git ls-files -o --exclude-standard && git diff-index --name-only HEAD | sort | uniq
+        tidy                   = ! git clean -fdX && find $(git rev-parse --show-toplevel) -type d -empty | grep -v '.git' | xargs rm -rfv
+        tube                   = log --decorate=short --no-merges --ignore-missing --simplify-merges --oneline --graph --all
+        undo                   = reset HEAD~1 --mixed
+        w                      = whatchanged
 [color]
-        diff = auto
-        status = auto
-        branch = auto
-        ui = true
+        branch      = auto
+        diff        = auto
+        grep        = auto
+        interactive = auto
+        showbranch  = auto
+        status      = auto
+        ui          = true
 [core]
-        excludesfile = ~/.gitignore
-        editor = vim
+        excludesfile         = ~/.gitignore
+        editor               = vim
+        autocrlf             = input
+        eol                  = lf
+        fsyncobjectfiles     = true
+        ignorecase           = false
+        ignoreCygwinFSTricks = false
+        preloadindex         = true
+        quotepath            = true
+[gc]
+        pruneexpire = now
 [apply]
         whitespace = nowarn
 [mergetool]
@@ -25,6 +42,11 @@
         prompt = false
 [help]
         autocorrect = 1
+[filter "lfs"]
+        clean    = git-lfs clean -- %f
+        smudge   = git-lfs smudge -- %f
+        required = true
+        process  = git-lfs filter-process
 [push]
         # See `git help config` (search for push.default)
         # for more information on different options of the below setting.
